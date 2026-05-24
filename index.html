@@ -1297,6 +1297,7 @@ function Gallery({ p, f }) {
               <div onClick={() => openSlot(i)} style={{ position: "relative", cursor: "zoom-in" }}>
                 <image-slot
                   id={`gallery-${i}`}
+                  src={`photos/photo${i + 1}.jpg`}
                   placeholder={c}
                   shape="rect"
                   style={{ display: "block", width: "100%", aspectRatio: "3/4" }}>
