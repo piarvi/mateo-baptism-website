@@ -70,7 +70,8 @@
       "Muted, nature-inspired tonal palettes (Sage, Blush, Ivory) paired with a deep Midnight Blue theme.",
       "Elegant editorial pairings of serif display headings with highly readable sans-serif body text.",
       "Structuring layout using hair-thin rule lines and whitespace rather than container cards or visual depth.",
-      "Completely flat design with zero drop shadows."
+      "Completely flat design with zero drop shadows.",
+      "Mobile-First Responsiveness: Fluid columns and flexible paddings that adapt the print-editorial look onto vertical handheld viewports."
     ],
     "rules": [
       { "name": "The Editorial Contrast Rule", "body": "Accent colors must only be used for meaningful emphasis (ornaments, active toggle buttons, key icons, primary CTAs) and must maintain a high contrast ratio against their respective theme backgrounds.", "section": "colors" },
@@ -83,7 +84,9 @@
       "Do use Cormorant Garamond for large display headings to capture the editorial feel.",
       "Do keep button and input corner radii at exactly 0px.",
       "Do separate sections with thin, high-contrast rules (1px border using {colors.rule}).",
-      "Do display clean, readable typography with high-contrast pairings (like Midnight Blue text on warm Linen background)."
+      "Do display clean, readable typography with high-contrast pairings (like Midnight Blue text on warm Linen background).",
+      "Do optimize layouts for phone screens using fluid paddings (e.g. 16px left/right margins on mobile, scaling to 32px+ on desktop).",
+      "Do ensure all interactive controls have a minimum touch target size of 44x44px for easy mobile usage."
     ],
     "donts": [
       "Don't use any card shadows or background blurs (glassmorphism is forbidden).",

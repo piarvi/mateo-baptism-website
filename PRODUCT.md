@@ -20,6 +20,7 @@ Flashy, loud, generic event templates
 1. **Intimate Serenity:** Visual styling should evoke a calm, personal, and warm family celebration, avoiding commercial or standard event-software aesthetics.
 2. **Effortless Clarity:** Layout and visual hierarchy must make schedules and location details immediately readable.
 3. **Frictionless Utility:** The RSVP submission and captcha process must be highly intuitive and completely reliable.
+4. **Mobile-First Accessibility:** Since most guests will access the invitation from their mobile devices, all layouts, tap targets, and typography must be optimized for handheld screens.
 
 ## Accessibility & Inclusion
-Prioritize legibility: maintain high contrast, use clear typographic scale, and ensure form controls are easy to tap and read on both mobile and desktop screens.
+Prioritize legibility and usability on mobile: maintain high contrast, ensure interactive elements have a minimum tap target of 44x44px, and use readable text sizes to avoid user zooming on phone viewports.

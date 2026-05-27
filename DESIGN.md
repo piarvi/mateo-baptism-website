@@ -89,6 +89,7 @@ Visual layout feels open, calm, and serene, prioritizing readability and high-co
 - Elegant editorial pairings of serif display headings with highly readable sans-serif body text.
 - Structuring layout using hair-thin rule lines and whitespace rather than container cards or visual depth.
 - Completely flat design with zero drop shadows.
+- Mobile-First Responsiveness: Fluid columns and flexible paddings that adapt the print-editorial look onto vertical handheld viewports.
 
 ## 2. Colors
 
@@ -142,9 +143,9 @@ The visual system is entirely flat to mimic traditional stationery. Depth is con
 
 ### Buttons
 - **Shape:** Completely flat, square edges (0px radius).
-- **Primary:** Solid dark ink color background with light surface text (`padding: 16px 32px`).
+- **Primary:** Solid dark ink color background with light surface text (`padding: 16px 32px`). Must maintain a minimum tap target height of 44px on mobile.
 - **Hover / Focus:** Fades smoothly to the accent color on hover.
-- **Active Toggles:** Inline selection buttons share the rule border color, turning solid ink on selection.
+- **Active Toggles:** Inline selection buttons share the rule border color, turning solid ink on selection. Tap target must span at least 44px in height.
 
 ### Cards / Containers
 - **Corner Style:** Square (0px radius).
@@ -153,7 +154,7 @@ The visual system is entirely flat to mimic traditional stationery. Depth is con
 - **Border:** 1px solid rule color.
 
 ### Inputs / Fields
-- **Style:** Clean border-bottom only (1px solid rule color), transparent background.
+- **Style:** Clean border-bottom only (1px solid rule color), transparent background. Height of input field must be at least 44px to prevent tap collision on mobile screens.
 - **Focus:** No glow or offset ring. Highlights the bottom border to the accent color.
 
 ### Navigation
@@ -166,6 +167,8 @@ The visual system is entirely flat to mimic traditional stationery. Depth is con
 - **Do** keep button and input corner radii at exactly `0px`.
 - **Do** separate sections with thin, high-contrast rules (`1px` border using `{colors.rule}`).
 - **Do** display clean, readable typography with high-contrast pairings (like Midnight Blue text on warm Linen background).
+- **Do** optimize layouts for phone screens using fluid paddings (e.g. 16px left/right margins on mobile, scaling to 32px+ on desktop).
+- **Do** ensure all interactive controls have a minimum touch target size of 44x44px for easy mobile usage.
 
 ### Don't:
 - **Don't** use any card shadows or background blurs (glassmorphism is forbidden).
