@@ -4,10 +4,33 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
-  const { name, attending, reception, note } = req.body;
+  const { name, attending, reception, note, captchaToken } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: 'Name is required' });
+  }
+
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+  if (turnstileSecret && turnstileSecret !== 'YOUR_SECRET_KEY') {
+    if (!captchaToken) {
+      return res.status(400).json({ error: 'Captcha verification is required.' });
+    }
+    try {
+      const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${encodeURIComponent(turnstileSecret)}&response=${encodeURIComponent(captchaToken)}`,
+      });
+      const verifyResult = await verifyResponse.json();
+      if (!verifyResult.success) {
+        return res.status(400).json({ error: 'Captcha verification failed. Please try again.' });
+      }
+    } catch (err) {
+      console.error('Turnstile verification error:', err);
+      return res.status(500).json({ error: 'Captcha service error' });
+    }
   }
 
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;

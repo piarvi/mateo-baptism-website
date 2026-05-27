@@ -1352,6 +1352,31 @@ function RSVP({ p, f }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [siteKey, setSiteKey] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/config")
+      .then(res => res.json())
+      .then(data => {
+        if (data.turnstileSiteKey) {
+          setSiteKey(data.turnstileSiteKey);
+        }
+      })
+      .catch(err => console.error("Error fetching config:", err));
+  }, []);
+
+  useEffect(() => {
+    if (siteKey) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, [siteKey]);
 
   const inputStyle = {
     width: "100%",
@@ -1410,6 +1435,18 @@ function RSVP({ p, f }) {
           setError(null);
           const attendingText = attending === "yes" ? "Joyfully, yes" : "Sadly, no";
           const receptionText = attending === "yes" ? (reception ? "Yes, staying for the reception" : "Just the chapel") : "N/A";
+
+          let captchaToken = null;
+          if (siteKey) {
+            const tokenEl = document.querySelector('[name="cf-turnstile-response"]');
+            captchaToken = tokenEl ? tokenEl.value : null;
+            if (!captchaToken) {
+              setError("Please complete the captcha verification.");
+              setSubmitting(false);
+              return;
+            }
+          }
+
           try {
             const response = await fetch('/api/rsvp', {
               method: 'POST',
@@ -1418,7 +1455,8 @@ function RSVP({ p, f }) {
                 name,
                 attending: attendingText,
                 reception: receptionText,
-                note
+                note,
+                captchaToken
               })
             });
             const data = await response.json();
@@ -1507,6 +1545,16 @@ function RSVP({ p, f }) {
               rows={3}
               style={{ ...inputStyle, resize: "vertical", paddingTop: 12 }} />
           </div>
+
+          {siteKey && (
+            <div style={{ marginBottom: 32, display: "flex", justifyContent: "center" }}>
+              <div
+                className="cf-turnstile"
+                data-sitekey={siteKey}
+                data-theme={p.bg.startsWith("#0") || p.bg.startsWith("#1") ? "dark" : "light"}
+              ></div>
+            </div>
+          )}
 
           {error && (
             <div style={{
