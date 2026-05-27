@@ -26,24 +26,6 @@
 <body>
   <div id="root"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    // ── EmailJS config ──────────────────────────────────────────────────
-    // 1. Sign up at https://www.emailjs.com (free tier: 200 emails/month)
-    // 2. Add an Email Service (connect your Gmail account)
-    // 3. Create an Email Template — use these variable names:
-    //      {{guest_name}}  {{attending}}  {{reception}}  {{note_for_mateo}}
-    // 4. Replace the three placeholder strings below with your real values.
-    const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";   // Account → API Keys
-    const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";   // Email Services tab
-    const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";  // Email Templates tab
-    if (typeof emailjs !== 'undefined') {
-      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-    }
-    window.EMAILJS_SERVICE_ID  = EMAILJS_SERVICE_ID;
-    window.EMAILJS_TEMPLATE_ID = EMAILJS_TEMPLATE_ID;
-  </script>
-
   <!-- image-slot web component -->
   <script>
   (() => {
@@ -1429,18 +1411,22 @@ function RSVP({ p, f }) {
           const attendingText = attending === "yes" ? "Joyfully, yes" : "Sadly, no";
           const receptionText = attending === "yes" ? (reception ? "Yes, staying for the reception" : "Just the chapel") : "N/A";
           try {
-            await emailjs.send(
-              window.EMAILJS_SERVICE_ID,
-              window.EMAILJS_TEMPLATE_ID,
-              {
-                guest_name: name,
+            const response = await fetch('/api/rsvp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name,
                 attending: attendingText,
                 reception: receptionText,
-                note_for_mateo: note || "(no note)",
-                to_email: "piarvi@gmail.com",
-              }
-            );
-            setSubmitted(true);
+                note
+              })
+            });
+            const data = await response.json();
+            if (response.ok && data.success) {
+              setSubmitted(true);
+            } else {
+              setError(data.error || "Something went wrong. Please try again or email us directly at piarvi@gmail.com");
+            }
           } catch (err) {
             setError("Something went wrong. Please try again or email us directly at piarvi@gmail.com");
           } finally {
