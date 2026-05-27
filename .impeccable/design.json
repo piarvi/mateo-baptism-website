@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-27T14:55:00Z",
+  "title": "Design System: Mateo's Baptism Invitation",
+  "extensions": {
+    "colorMeta": {
+      "ivory-bg": { "role": "neutral", "displayName": "Porcelain Base", "canonical": "#eef2f7" },
+      "ivory-surface": { "role": "neutral", "displayName": "Porcelain Surface", "canonical": "#f6f8fb" },
+      "ivory-ink": { "role": "neutral", "displayName": "Porcelain Ink", "canonical": "#162033" },
+      "ivory-muted": { "role": "neutral", "displayName": "Porcelain Muted", "canonical": "#586a82" },
+      "ivory-rule": { "role": "neutral", "displayName": "Porcelain Rule", "canonical": "#cdd6e2" },
+      "ivory-accent": { "role": "primary", "displayName": "Porcelain Accent", "canonical": "#3f6fa8" },
+      
+      "sage-bg": { "role": "neutral", "displayName": "Seaglass Base", "canonical": "#e6ecec" },
+      "sage-surface": { "role": "neutral", "displayName": "Seaglass Surface", "canonical": "#f0f4f4" },
+      "sage-ink": { "role": "neutral", "displayName": "Seaglass Ink", "canonical": "#152025" },
+      "sage-muted": { "role": "neutral", "displayName": "Seaglass Muted", "canonical": "#566972" },
+      "sage-rule": { "role": "neutral", "displayName": "Seaglass Rule", "canonical": "#c3d0d2" },
+      "sage-accent": { "role": "primary", "displayName": "Seaglass Accent", "canonical": "#5a8a9a" },
+      
+      "blush-bg": { "role": "neutral", "displayName": "Linen Base", "canonical": "#f1ece4" },
+      "blush-surface": { "role": "neutral", "displayName": "Linen Surface", "canonical": "#f9f5ee" },
+      "blush-ink": { "role": "neutral", "displayName": "Linen Ink", "canonical": "#13192a" },
+      "blush-muted": { "role": "neutral", "displayName": "Linen Muted", "canonical": "#5b6478" },
+      "blush-rule": { "role": "neutral", "displayName": "Linen Rule", "canonical": "#d8d0c1" },
+      "blush-accent": { "role": "primary", "displayName": "Linen Accent", "canonical": "#2a4a8a" },
+      
+      "ink-bg": { "role": "neutral", "displayName": "Midnight Base", "canonical": "#0f1726" },
+      "ink-surface": { "role": "neutral", "displayName": "Midnight Surface", "canonical": "#16203a" },
+      "ink-ink": { "role": "neutral", "displayName": "Midnight Ink", "canonical": "#eaf0fa" },
+      "ink-muted": { "role": "neutral", "displayName": "Midnight Muted", "canonical": "#8a9cba" },
+      "ink-rule": { "role": "neutral", "displayName": "Midnight Rule", "canonical": "#283556" },
+      "ink-accent": { "role": "primary", "displayName": "Midnight Accent", "canonical": "#a8c3e6" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Heading", "purpose": "Serif font used for Mateo's name and page-level headings." },
+      "body": { "displayName": "Body Sans", "purpose": "Clean sans-serif used for all descriptions, details, and form fields." },
+      "label": { "displayName": "Monospace Label", "purpose": "Monospace font for eyebrows, small details, and inputs." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "fade-standard", "value": "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Standard fade for hover states." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Flat, square primary action button used for sending the RSVP reply.",
+      "html": "<button class=\"ds-btn-primary\">SEND REPLY</button>",
+      "css": ".ds-btn-primary { background: #13192a; color: #f9f5ee; padding: 16px 32px; font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.1em; border: none; border-radius: 0px; cursor: pointer; transition: background 0.2s; } .ds-btn-primary:hover { background: #2a4a8a; }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Clean bottom-border-only text input field.",
+      "html": "<input type=\"text\" class=\"ds-input-text\" placeholder=\"Your name\" />",
+      "css": ".ds-input-text { width: 100%; padding: 14px 0; background: transparent; border: none; border-bottom: 1px solid #d8d0c1; color: #13192a; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; transition: border-color 0.2s; } .ds-input-text:focus { border-bottom-color: #2a4a8a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Linen & Parchment",
+    "overview": "This system represents a tactile, print-editorial design inspired by physical, high-end paper stationery and warm, intimate celebrations. It emphasizes generous whitespace, elegant serif typography, clean divider lines, and a complete absence of modern app-like styling.",
+    "keyCharacteristics": [
+      "Muted, nature-inspired tonal palettes (Sage, Blush, Ivory) paired with a deep Midnight Blue theme.",
+      "Elegant editorial pairings of serif display headings with highly readable sans-serif body text.",
+      "Structuring layout using hair-thin rule lines and whitespace rather than container cards or visual depth.",
+      "Completely flat design with zero drop shadows."
+    ],
+    "rules": [
+      { "name": "The Editorial Contrast Rule", "body": "Accent colors must only be used for meaningful emphasis (ornaments, active toggle buttons, key icons, primary CTAs) and must maintain a high contrast ratio against their respective theme backgrounds.", "section": "colors" },
+      { "name": "The No-Gradient Rule", "body": "Gradients are strictly prohibited. Backgrounds and text elements must remain solid to preserve the flat, paper-like aesthetic.", "section": "colors" },
+      { "name": "The Generous Leading Rule", "body": "All body copy must maintain a high line-height (1.6) to guarantee absolute legibility and breathing room.", "section": "typography" },
+      { "name": "The Monospace Eyebrow Rule", "body": "All section subtitles and eyebrow headers must use JetBrains Mono in uppercase with wide letter spacing.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Drop shadows and box-shadows are strictly forbidden. Interfaces must rely on hair-thin divider lines (1px) and solid contrast to represent structure.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Cormorant Garamond for large display headings to capture the editorial feel.",
+      "Do keep button and input corner radii at exactly 0px.",
+      "Do separate sections with thin, high-contrast rules (1px border using {colors.rule}).",
+      "Do display clean, readable typography with high-contrast pairings (like Midnight Blue text on warm Linen background)."
+    ],
+    "donts": [
+      "Don't use any card shadows or background blurs (glassmorphism is forbidden).",
+      "Don't use flashy or loud animations; page entrances should feel quiet and gradual.",
+      "Don't use side-stripe borders as card accents.",
+      "Don't use gradient text under any circumstances."
+    ]
+  }
+}
