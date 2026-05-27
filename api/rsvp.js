@@ -25,7 +25,9 @@ export default async function handler(req, res) {
       });
       const verifyResult = await verifyResponse.json();
       if (!verifyResult.success) {
-        return res.status(400).json({ error: 'Captcha verification failed. Please try again.' });
+        console.error('Turnstile verification failed. Result:', verifyResult);
+        const errorMsg = verifyResult['error-codes'] ? verifyResult['error-codes'].join(', ') : 'unknown error';
+        return res.status(400).json({ error: `Captcha verification failed: ${errorMsg}` });
       }
     } catch (err) {
       console.error('Turnstile verification error:', err);
