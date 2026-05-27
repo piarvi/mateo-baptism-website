@@ -13,6 +13,7 @@ export default async function handler(req, res) {
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
   if (!publicKey || publicKey === 'YOUR_PUBLIC_KEY' || !serviceId || !templateId) {
     console.error('Missing or default EmailJS configuration in environment variables');
@@ -29,6 +30,7 @@ export default async function handler(req, res) {
         service_id: serviceId,
         template_id: templateId,
         user_id: publicKey,
+        ...(privateKey && { accessToken: privateKey }),
         template_params: {
           guest_name: name,
           attending: attending,
