@@ -168,6 +168,53 @@
       flex-direction: column;
     }
   }
+
+  /* Clickable Teddy Bears */
+  .teddy-bear-wrapper {
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s;
+    z-index: 10;
+    will-change: transform, opacity;
+    opacity: 0.65;
+  }
+  .teddy-bear-wrapper:hover {
+    opacity: 0.95 !important;
+  }
+  .bear-pop-anim {
+    animation: bear-pop-keyframes 0.35s forwards cubic-bezier(0.175, 0.885, 0.32, 1.25);
+    pointer-events: none;
+  }
+  @keyframes bear-pop-keyframes {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.3); }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  @keyframes bear-float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(3deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+  }
+  
+  /* Particles from popped bear */
+  .bear-particle {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 11;
+    animation: particle-fly 0.6s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+  }
+  @keyframes particle-fly {
+    0% {
+      transform: translate(-50%, -50%) scale(1) translate(0, 0);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(0) translate(var(--dx), var(--dy));
+      opacity: 0;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1056,7 +1103,112 @@ function Eyebrow({ children, color }) {
   );
 }
 
+function TeddyBearSVG({ color, size = 56 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" style={{ display: 'block', overflow: 'visible' }}>
+      {/* Ears */}
+      <circle cx="28" cy="28" r="14" fill={color} />
+      <circle cx="28" cy="28" r="7" fill="#ffffff" opacity="0.35" />
+      <circle cx="72" cy="28" r="14" fill={color} />
+      <circle cx="72" cy="28" r="7" fill="#ffffff" opacity="0.35" />
+      
+      {/* Head */}
+      <circle cx="50" cy="54" r="30" fill={color} />
+      
+      {/* Muzzle */}
+      <ellipse cx="50" cy="63" rx="13" ry="9" fill="#ffffff" opacity="0.45" />
+      
+      {/* Nose & Mouth */}
+      <path d="M47 60 L53 60 L50 63 Z" fill="#162033" />
+      <path d="M50 63 L50 67" stroke="#162033" strokeWidth="1.5" strokeLinecap="round" />
+      
+      {/* Eyes */}
+      <circle cx="39" cy="48" r="3.5" fill="#162033" />
+      <circle cx="61" cy="48" r="3.5" fill="#162033" />
+      {/* Eye highlights */}
+      <circle cx="38.5" cy="47" r="1" fill="#ffffff" />
+      <circle cx="60.5" cy="47" r="1" fill="#ffffff" />
+      
+      {/* Blush Cheeks */}
+      <circle cx="34" cy="55" r="3" fill="#f08080" opacity="0.5" />
+      <circle cx="66" cy="55" r="3" fill="#f08080" opacity="0.5" />
+    </svg>
+  );
+}
+
 function Hero({ p, f, showOrnament, variant }) {
+  const [bears, setBears] = useState([]);
+  const [particles, setParticles] = useState([]);
+
+  const createBear = (id) => {
+    // Left or right side to avoid overlapping the central text
+    const isLeft = Math.random() < 0.5;
+    const x = isLeft 
+      ? 6 + Math.random() * 18   // 6% to 24%
+      : 76 + Math.random() * 18;  // 76% to 94%
+    const y = 15 + Math.random() * 65; // 15% to 80%
+    const scale = 0.75 + Math.random() * 0.35; // 0.75 to 1.1
+    const rotation = -20 + Math.random() * 40; // -20 to 20 deg
+    const floatDelay = Math.random() * -6; // -6s to 0s
+    return {
+      id: id !== undefined ? id : Date.now() + Math.random(),
+      x,
+      y,
+      scale,
+      rotation,
+      floatDelay,
+      popping: false
+    };
+  };
+
+  useEffect(() => {
+    // Generate initial 8 bears
+    const initialBears = Array.from({ length: 8 }).map((_, i) => createBear(i));
+    setBears(initialBears);
+  }, []);
+
+  const handleBearClick = (id, e) => {
+    const bear = bears.find(b => b.id === id);
+    if (!bear || bear.popping) return;
+
+    setBears(prev => prev.map(b => b.id === id ? { ...b, popping: true } : b));
+
+    const numParticles = 12;
+    const newParticles = Array.from({ length: numParticles }).map((_, i) => {
+      const angle = (i / numParticles) * Math.PI * 2 + Math.random() * 0.3;
+      const distance = 30 + Math.random() * 50; // px
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      const size = 3 + Math.random() * 5; // px
+      
+      const colors = [p.accent, p.muted, p.rule, '#dfbfa7', '#d8c2b1'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      return {
+        id: `${Date.now()}-${i}-${Math.random()}`,
+        x: bear.x,
+        y: bear.y,
+        dx: `${dx}px`,
+        dy: `${dy}px`,
+        size,
+        color
+      };
+    });
+
+    setParticles(prev => [...prev, ...newParticles]);
+
+    setTimeout(() => {
+      setBears(prev => {
+        const filtered = prev.filter(b => b.id !== id);
+        return [...filtered, createBear()];
+      });
+    }, 350);
+
+    setTimeout(() => {
+      setParticles(prev => prev.filter(p => !newParticles.some(np => np.id === p.id)));
+    }, 600);
+  };
+
   return (
     <section className="hero-section" style={{
       borderBottom: `1px solid ${p.rule}`
@@ -1148,6 +1300,48 @@ function Hero({ p, f, showOrnament, variant }) {
       <div style={{ marginTop: 56, color: p.muted, fontSize: 13, letterSpacing: "0.1em", fontFamily: "'JetBrains Mono', monospace" }}>
         ↓ &nbsp; SCROLL FOR DETAILS
       </div>
+
+      {/* Clickable Teddy Bears */}
+      {bears.map(bear => (
+        <div 
+          key={bear.id}
+          className="teddy-bear-wrapper"
+          style={{
+            left: `${bear.x}%`,
+            top: `${bear.y}%`,
+            transform: `translate(-50%, -50%) scale(${bear.scale}) rotate(${bear.rotation}deg)`,
+            opacity: bear.popping ? 0.3 : 0.65,
+            transition: 'opacity 0.2s',
+          }}
+          onClick={(e) => handleBearClick(bear.id, e)}
+        >
+          <div className={bear.popping ? 'bear-pop-anim' : ''}>
+            <div style={{
+              animation: `bear-float 4s ease-in-out infinite`,
+              animationDelay: `${bear.floatDelay}s`
+            }}>
+              <TeddyBearSVG color={p.accent} />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {/* Pop particles */}
+      {particles.map(part => (
+        <div
+          key={part.id}
+          className="bear-particle"
+          style={{
+            left: `${part.x}%`,
+            top: `${part.y}%`,
+            width: part.size,
+            height: part.size,
+            backgroundColor: part.color,
+            '--dx': part.dx,
+            '--dy': part.dy
+          }}
+        />
+      ))}
     </section>
   );
 }
