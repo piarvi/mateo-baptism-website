@@ -1366,16 +1366,49 @@ function RSVP({ p, f }) {
   }, []);
 
   useEffect(() => {
-    if (siteKey) {
-      const script = document.createElement("script");
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-      return () => {
-        document.body.removeChild(script);
+    if (!siteKey) return;
+
+    let widgetId = null;
+
+    const renderWidget = () => {
+      const container = document.getElementById("turnstile-container");
+      if (window.turnstile && container && container.children.length === 0) {
+        try {
+          widgetId = window.turnstile.render("#turnstile-container", {
+            sitekey: siteKey,
+            theme: p.bg.startsWith("#0") || p.bg.startsWith("#1") ? "dark" : "light",
+          });
+        } catch (err) {
+          console.error("Turnstile render error:", err);
+        }
+      }
+    };
+
+    if (window.turnstile) {
+      setTimeout(renderWidget, 100);
+    } else {
+      window.onloadTurnstileCallback = () => {
+        renderWidget();
       };
+      
+      const scriptId = "cloudflare-turnstile-script";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback";
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+      }
     }
+
+    return () => {
+      if (widgetId && window.turnstile) {
+        try {
+          window.turnstile.remove(widgetId);
+        } catch (e) {}
+      }
+    };
   }, [siteKey]);
 
   const inputStyle = {
@@ -1548,11 +1581,7 @@ function RSVP({ p, f }) {
 
           {siteKey && (
             <div style={{ marginBottom: 32, display: "flex", justifyContent: "center" }}>
-              <div
-                className="cf-turnstile"
-                data-sitekey={siteKey}
-                data-theme={p.bg.startsWith("#0") || p.bg.startsWith("#1") ? "dark" : "light"}
-              ></div>
+              <div id="turnstile-container"></div>
             </div>
           )}
 
